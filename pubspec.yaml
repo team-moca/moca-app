@@ -30,6 +30,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
+  libmoca:
+    path: ../moca-proto/gen/dart
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
