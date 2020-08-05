@@ -26,7 +26,7 @@ class _DataInput extends State<DataInput> {
 
   @override
   Widget build(BuildContext context) {
-    Column(
+    return Column(
       children: [
         TextField(
           controller: usernameController,
