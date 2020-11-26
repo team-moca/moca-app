@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:moca/screens/overview.dart';
-import 'package:moca/screens/login.dart';
-
-
+import 'package:moca_application/screens/LoginRoute.dart';
+import 'package:moca_application/api/Authentication.dart';
+import 'package:moca_application/screens/overview.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if(Authentication().getToken() != null){
+    runApp(MaterialApp(home: LoginRoute(),));
+  }else{
+    runApp(MaterialApp(home: LoginRoute(),));
+  }
+  //check if user already logged in on this device
+
 
   //now runing chat overview
   //TODO add splash screen through launch_background.xml ()
   //TODO check if initial login route should be used --> tutorial , initial setup
-  //runApp(MaterialApp(home: Overview(
-  runApp(MaterialApp(home: LoginRoute(
 
-
-  ),
-  ));
 }

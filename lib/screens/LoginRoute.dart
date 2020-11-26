@@ -1,6 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/screens/overview.dart';
 import 'package:moca_application/api/login.dart';
+import 'package:moca_application/api/getchats.dart';
+import 'dart:convert' as JSON;
+
+import 'package:moca_application/api/Authentication.dart';
+import 'dart:async';
+
+
+
+
+class LoginRoute extends StatefulWidget {
+  @override
+  _LoginRouteState createState() => _LoginRouteState();
+}
+
+class _LoginRouteState extends State<LoginRoute> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("login screen"),
+      ),
+      body: Center(
+
+        child:  DataInput(),
+
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        label: Text('Sign up'),
+
+      ),
+    );
+  }
+}
+
 
 class DataInput extends StatefulWidget {
   @override
@@ -25,10 +62,8 @@ class _DataInput extends State<DataInput> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Column(
+  Widget build(BuildContext context)  {
+    return  Column(
           children: [
             TextField(
               controller: usernameController,
@@ -45,42 +80,20 @@ class _DataInput extends State<DataInput> {
               autofocus: false,
             ),
             RaisedButton(
-              onPressed: () {
+              onPressed: () async {
+                await Login().login(usernameController.text, passwordController.text, "devicename");
+                var chats = await GetChats().getChats();
+
+                Navigator.push(
+                 context,
+                  MaterialPageRoute(builder: (context) => Overview(chats: chats)),
+                 );
               },
-              child: Text('Register'),
+              child: Text('Login'),
             ),
           ],
-        ),
-      ),
-    );
+        );
 
-  }
-}
 
-class RegisterRoute extends StatefulWidget {
-  @override
-  _RegisterRouteState createState() => _RegisterRouteState();
-}
-
-class _RegisterRouteState extends State<RegisterRoute> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("login screen"),
-      ),
-      body: Center(
-
-        child:  DataInput(),
-
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        label: Text('Sign up'),
-
-      ),
-    );
   }
 }

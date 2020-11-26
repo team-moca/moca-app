@@ -1,4 +1,4 @@
-package nickschestag.moca
+package nickschestag.moca_app
 
 import io.flutter.embedding.android.FlutterActivity
 

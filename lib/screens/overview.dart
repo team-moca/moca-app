@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:moca/screens/chat.dart';
-import 'package:moca/screens/settings.dart';
-import 'package:moca/screens/newchat.dart';
-import 'package:moca/mockData.dart';
+import 'package:moca_application/screens/chat.dart';
+import 'package:moca_application/screens/settings.dart';
+import 'package:moca_application/screens/newchat.dart';
+import 'dart:convert';
+import 'package:moca_application/api/getmessages.dart';
+
 
 
 class Overview extends StatefulWidget {
-  // This widget is the root of your application.
+  final String chats;
+  Overview({Key key, @required this.chats}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  _Overview createState() => _Overview();
 }
 
-class _MyAppState extends State<Overview> {
-  //make this a list of chat items
-  //getting the data will be async later
-  var testdata = new MockData().getData();
-  List chats =[];//make this list of chat previews
+class _Overview extends State<Overview> {
+
+  //why do I need to do this?
+  @override
+  Overview get widget => super.widget;
+
 
 
 
   @override
   Widget build(BuildContext context) {
+    // chats come from Overview to _Overview
+    print(widget.chats);
+    var chats = jsonDecode(widget.chats);
+
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[100],
@@ -53,38 +63,47 @@ class _MyAppState extends State<Overview> {
             Expanded(
               child: SizedBox(
                 height: 500,
+                //make list entries dismissibles
                 child: ListView.builder(
-                  //itemcount depends on nr of chats
-                  itemCount:testdata["messages"].length,
+                  itemCount:chats.length,
 
                     itemBuilder: (context, index) {
-                    print (chats);
-                    var chat = testdata["messages"]["786123"]["content"];
-                    var sender = testdata["name"];
-                    var sent = testdata["messages"]["786123"]["senttime"];
+                    var chat = chats[index]["name"];
                     //each is a chat
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
                       child: Dismissible(
+                        //dismissible needs key to identify witch dismissible is meant
                         key: Key(chat),
                         onDismissed: (direction) {
                           // Remove the item from the data source.
                           setState(() {
-                            chats.removeAt(index);
-                            print(chats);
+                            //TODO: remove chat from screen
+                            //TODO: call api with DELETE /chats/$id
                           });
                         },
                         background: Container(color: Colors.redAccent[100]),
                         child: ListTile(
-                          title: Text('$sender'),
-                          leading: FlutterLogo(size: 56.0),
-                            subtitle:Text('$chat'),//chatpreview name),
-                            trailing: Text('$sent'),
+                          title: Text("$chat"),
+                          //TODO: replace flutter logo with chats' profile picture
+                          leading: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                "https://freedesignfile.com/upload/2017/08/astronaut-icon-vector.png",
+                                height: 40,
+                              )
+                            ],
+                          ),
+                            subtitle:Text('$chat'),
+                            trailing: Text('time sent'),
 
-                          onTap: () {
+                          onTap: () async {
+                            var messages = await GetMessages().getMessages(chats[index]["chat_id"]);
+
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ChatRoute("Nick")),
+                              MaterialPageRoute(builder: (context) => ChatRoute(messages: messages, name: chats[index]["name"])),
                             );
                           },
 
@@ -103,8 +122,7 @@ class _MyAppState extends State<Overview> {
                   child: FloatingActionButton(
                     child: Icon(Icons.add),
                     backgroundColor: Colors.purple[300],
-                    onPressed:(){
-                      //depending on clicked chat
+                    onPressed:()  {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => NewChatRoute()),
