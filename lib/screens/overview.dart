@@ -73,6 +73,7 @@ class _Overview extends State<Overview> {
                       //print("XXXX"+snapshot.data);
 
                       if (snapshot.hasData) {
+                        print(snapshot.data.toString());
                         var chats = jsonDecode(snapshot.data);
                         while(chats==null){print("");}
                         children = ListView.builder(
@@ -127,7 +128,7 @@ class _Overview extends State<Overview> {
                                     ],
                                   ),
                                   //TODO: if last message is image or video, display text
-                                  subtitle:Text(chats[index]["last_message"]["message"]["content"]),
+                                  subtitle:Text (chats[index]["last_message"]["message"]["content"]!=null ? (chats[index]["last_message"]["message"]["content"]) : "Mediendatei"),
                                   //TODO: format text for time of last message -> time or days ago
                                   trailing: Text(chats[index]["last_message"]["sent_datetime"],
                                       style: TextStyle(
