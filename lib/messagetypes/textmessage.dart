@@ -1,17 +1,27 @@
 //TODO content from API
 import 'package:flutter/material.dart';
 
-class Message extends StatefulWidget {  
-  @override
-  _MessageState createState() => _MessageState();
-}
+class TextMessage {
 
-class _MessageState extends State<Message> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Icon(Icons.image)
-          //TODO max width, bg color, padding, align left / right
+  Widget createTextMessage(message){
+
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              RichText(
+                text: TextSpan(
+                  text:(message["message"]["content"]),
+                  style: TextStyle(color: Colors.black),
+                )
+              ),
+            ],
+          ),
+        ),
     );
   }
 }

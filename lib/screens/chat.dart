@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
+import 'package:moca_application/messagetypes/messageType.dart';
+import 'package:moca_application/api/sendmessage.dart';
+import 'package:moca_application/helper/token.dart';
+import 'package:moca_application/helper/token.dart';
 import 'package:moca_application/screens/contactprofileview.dart';
 //import  'package:keyboard_actions/keyboard_actions.dart';
 
@@ -9,8 +12,11 @@ import 'package:moca_application/screens/contactprofileview.dart';
 class ChatRoute extends StatefulWidget {
   final String messages;
   final String name;
+  final String chatId;
 
-  ChatRoute({Key key, @required this.messages, @required this.name}) : super(key: key);
+  ChatRoute({Key key, @required this.messages, @required this.name, @required this.chatId}) : super(key: key);
+
+
 
   @override
   _ChatRouteState createState() => _ChatRouteState();
@@ -18,23 +24,31 @@ class ChatRoute extends StatefulWidget {
 
 class _ChatRouteState extends State<ChatRoute> {
 
-  ChatRoute get widget => super.widget;
-
   final messageController = TextEditingController();
+  int i= 0;
+  int yourId;
+  var messages;
+  var name;
+  var chatId;
 
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     messageController.dispose();
     super.dispose();
   }
 
     @override
     Widget build(BuildContext context) {
-      var messages = jsonDecode(widget.messages);
-      var name = widget.name;
-      print(widget.messages);
+
+
+      if(i==0){
+        messages = jsonDecode(widget.messages);
+        name = widget.name;
+        chatId = widget.chatId;
+      }
+
+
 
 
       return MaterialApp(
@@ -67,25 +81,46 @@ class _ChatRouteState extends State<ChatRoute> {
             ),
             body: Column(
               children: [
-                ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    var message = messages[index];
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      var message = messages[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2.0, horizontal: 4.0),
-                      child: ListTile(
-                        title: Text(message["message"]["content"]),
-                        trailing: Text('time sent'),
+                      return FutureBuilder(
+                        future:  MessageType().whoIsOwner(message["message"]["type"], message),
+                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                          Widget child;
+                          if (snapshot.hasData) {
+                            child = snapshot.data;
+                          }else if (snapshot.hasError) {
+                            child = Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 40,
+                            );
+                          }else {
+                            child = SizedBox(
+                              child: Icon(
+                                  Icons.account_circle_sharp,
+                                  size:40),
+                            );
+                          }
+                          return  Padding(
+                           padding: const EdgeInsets.symmetric(
+                               vertical: 2.0, horizontal: 4.0),
+                           child:  child
 
-                        onTap: () async {},
+                           );
+                        },
 
-                      ),
-                    );
-                  },
+                      );
+
+
+                    },
+                  ),
                 ),
 
                 Row(
@@ -107,10 +142,41 @@ class _ChatRouteState extends State<ChatRoute> {
                         ),
                       ),
                     ),
-                    RaisedButton(
+                    FloatingActionButton(
                       onPressed: () async {
+                        print("send message button clicked");
+                        yourId = await Token().yourId();
+                        setState(() {
+                          i=1;
+
+                          if(messageController.text!=""){
+
+                            SendMessage().textMessage(messageController.text, chatId);
+
+                            messages.add({
+                              "message_id": messages[messages.length-1]["message_id"]-1,
+                              //TODO: contact_id should be own id, received from auth token -> write function for that
+                              "contact_id": yourId,
+                              "message":{
+                                "type":"text",
+                                "content": messageController.text
+                              },
+                              "sent_datetime": "2020-11-11T09:02:30"
+                            });
+
+                            print(messages.last);
+
+                          }
+
+                          //messages;
+                        });
+
+                        messageController.clear();
                       },
-                      child: Text('icon'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Icon(Icons.arrow_right_outlined),
                     ),
                   ],
                 ),

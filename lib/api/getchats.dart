@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'dart:io';
+
+
 
 
 class GetChats {
@@ -15,8 +19,12 @@ class GetChats {
 
   Future<String> getChats() async {
 
+    print("TEST");
+
+
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+
 
     final http.Response response = await http.get(
       BASE_URL,

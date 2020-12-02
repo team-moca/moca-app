@@ -4,12 +4,10 @@ import 'package:moca_application/api/Authentication.dart';
 import 'package:moca_application/screens/overview.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  if(Authentication().getToken() != null){
-    runApp(MaterialApp(home: LoginRoute(),));
-  }else{
-    runApp(MaterialApp(home: LoginRoute(),));
-  }
+
+    runApp(MaterialApp(home: LoginRoute(),
+    ));
+
   //check if user already logged in on this device
 
 
@@ -18,3 +16,5 @@ void main() {
   //TODO check if initial login route should be used --> tutorial , initial setup
 
 }
+
+

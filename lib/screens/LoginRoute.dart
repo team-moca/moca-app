@@ -4,6 +4,9 @@ import 'package:moca_application/api/login.dart';
 import 'package:moca_application/api/getchats.dart';
 import 'dart:convert' as JSON;
 
+import 'package:moca_application/helper/token.dart';
+
+
 import 'package:moca_application/api/Authentication.dart';
 import 'dart:async';
 
@@ -82,11 +85,13 @@ class _DataInput extends State<DataInput> {
             RaisedButton(
               onPressed: () async {
                 await Login().login(usernameController.text, passwordController.text, "devicename");
-                var chats = await GetChats().getChats();
+
+                //var chats = await GetChats().getChats();
 
                 Navigator.push(
                  context,
-                  MaterialPageRoute(builder: (context) => Overview(chats: chats)),
+                  //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
+                  MaterialPageRoute(builder: (context) => Overview()),
                  );
               },
               child: Text('Login'),

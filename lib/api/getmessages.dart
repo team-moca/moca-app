@@ -22,7 +22,7 @@ class GetMessages {
     final http.Response response = await http.get(
         URL,
         headers: <String, String>{
-          "Authorization":"Bearer "+ token,
+            "Authorization":"Bearer "+ token,
           "Content-Type": "application/json; charset=UTF-8",
         }
 
