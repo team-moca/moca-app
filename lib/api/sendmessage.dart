@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SendMessage {
 
-  Future<String> textMessage(String messageContent, String chatId) async {
+  Future<String> textMessage(String messageContent, int chatId) async {
 
     final String URL="http://127.0.0.1:5000/chats/" + chatId + "/messages";
     final prefs = await SharedPreferences.getInstance();
