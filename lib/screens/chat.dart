@@ -12,7 +12,7 @@ import 'package:moca_application/screens/contactprofileview.dart';
 class ChatRoute extends StatefulWidget {
   final String messages;
   final String name;
-  final String chatId;
+  final int chatId;
 
   ChatRoute({Key key, @required this.messages, @required this.name, @required this.chatId}) : super(key: key);
 

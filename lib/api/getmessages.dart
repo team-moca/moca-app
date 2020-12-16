@@ -12,7 +12,7 @@ class GetMessages {
     return token;
   }
 
-  Future<String> getMessages(String userId) async {
+  Future<String> getMessages(int userId) async {
 
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

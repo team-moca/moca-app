@@ -14,20 +14,17 @@ print("login initiated");
     final http.Response response = await http.post(
       BASE_URL,
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        //'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({
-        //NOTE: Use of the proper input field works and is in comments for easier testing
-        //"username": username,
-        //"hash": hash,
-      "username": "jkahnwald",
-      "hash": "53fab271885be6d753d501940409376b94ca7b7a",
-       "device_name":  "MOCA Server API Playground"
-      }),
+      body: <String, String>{
+        "grant-type": "password",
+        "username": "jkahnwald",
+        "password": "jkahnwald"
+      }
     );
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', jsonDecode(response.body)["token"]);
+      prefs.setString('token', jsonDecode(response.body)["access_token"]);
       print("Print token inside Login.dart: " + prefs.getString("token"));
       return response;
       //at this point the authentication was successful, the verification token is saved in shared preferences
