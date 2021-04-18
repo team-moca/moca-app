@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-
 import 'package:moca_application/messagetypes/textMessage.dart';
 import 'package:moca_application/messagetypes/videoMessage.dart';
 import 'package:moca_application/messagetypes/imageMessage.dart';

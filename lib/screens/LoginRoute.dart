@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:moca_application/screens/overview.dart';
+import 'package:moca_application/screens/AllChatsRoute.dart';
 import 'package:moca_application/api/login.dart';
-import 'package:moca_application/api/getchats.dart';
+import 'package:http/http.dart' as http;
+import 'package:moca_application/api/getChats.dart';
 import 'dart:convert' as JSON;
+import 'package:moca_application/database/getFromDatabase.dart';
 
 import 'package:moca_application/helper/token.dart';
 
 
 import 'package:moca_application/api/Authentication.dart';
 import 'dart:async';
+
+import 'package:moca_application/screens/RegistrationRoute.dart';
 
 
 
@@ -32,8 +36,10 @@ class _LoginRouteState extends State<LoginRoute> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Add your onPressed code here!
-        },
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RegisterRoute()),
+          );        },
         label: Text('Sign up'),
 
       ),
@@ -82,17 +88,41 @@ class _DataInput extends State<DataInput> {
               obscureText: true,
               autofocus: false,
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () async {
-                await Login().login(usernameController.text, passwordController.text, "devicename");
-
-                //var chats = await GetChats().getChats();
-
-                Navigator.push(
-                 context,
-                  //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
-                  MaterialPageRoute(builder: (context) => Overview()),
-                 );
+                print("hallo");
+                http.Response response = await Login().login(usernameController.text, passwordController.text);
+                //todo: check the response of Login().login -> if status code != 200 show error
+                print("hallo");
+                if(response.statusCode==200){
+                  Navigator.push(
+                    context,
+                    //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
+                    MaterialPageRoute(builder: (context) => AllChats()),
+                  );
+                }else if(500 <= response.statusCode && response.statusCode <= 600){
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text('Oops, the server is currently unreachable'),
+                      );
+                    },
+                  );
+                }else{
+                  usernameController.clear();
+                  passwordController.clear();
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text('Oops, username or password wrong'),
+                      );
+                    },
+                  );
+                }
               },
               child: Text('Login'),
             ),
