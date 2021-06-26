@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/screens/AllChatsRoute.dart';
 import 'package:moca_application/screens/NewConnectorCreation.dart';
+import 'package:flutter/services.dart';
+import 'package:moca_application/api/connectorSetup.dart';
+import 'package:moca_application/api/connectorSetup.dart';
 import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
 import 'package:moca_application/screens/NewChatRoute.dart';
@@ -14,22 +17,28 @@ import 'package:moca_application/api/getChats.dart';
 
 
 
-class NewConnector extends StatefulWidget {
-  //final String chats;
-  // Overview({Key key, @required this.chats}) : super(key: key);
+class TelegramVerificationRoute extends StatefulWidget {
+
+  final int connectorID;
+  TelegramVerificationRoute({Key key, @required this.connectorID}) : super(key: key);
+
 
   @override
-  _NewConnector  createState() => _NewConnector ();
+  _TelegramVerificationRoute  createState() => _TelegramVerificationRoute ();
 }
 
-class _NewConnector  extends State<NewConnector > {
+class _TelegramVerificationRoute  extends State<TelegramVerificationRoute > {
+
+  String code;
+  final verificationController = TextEditingController();
+
 
 
   @override
   Widget build(BuildContext context) {
     // chats come from Overview to _Overview
     // var chats = jsonDecode(widget.chats);
-
+    var connectorId = widget.connectorID;
 
     return MaterialApp(
       home: Scaffold(
@@ -39,7 +48,7 @@ class _NewConnector  extends State<NewConnector > {
           backgroundColor: Colors.grey[300],
           elevation: 0,
           title: Text(
-            "CONNECTORS",
+            "VERIFY TELEGRAM",
             style: TextStyle(
               letterSpacing: 2.5,
             ),
@@ -47,7 +56,7 @@ class _NewConnector  extends State<NewConnector > {
           centerTitle: true,
         ),
 
-        drawer: Drawer(
+       /* drawer: Drawer(
           child: ListView(
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
@@ -57,14 +66,6 @@ class _NewConnector  extends State<NewConnector > {
                 decoration: BoxDecoration(
                   color:  Colors.grey[300],
                 ),
-              ),
-              ListTile(
-                title: Text('Chats'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => AllChats()));
-                },
               ),
               ListTile(
                 title: Text('Add service'),
@@ -92,26 +93,50 @@ class _NewConnector  extends State<NewConnector > {
               ),
             ],
           ),
-        ),
+        ),*/
 
         body: Column(
           children: [
-            Text("You have not set up any connectors yet."),
             Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    child: Text(
-                      "Add new connector"
-                    ),
-                    onPressed: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NewConnectorCreation()));
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: verificationController,
+                    decoration: new InputDecoration(labelText: "Enter your verification code"),
+                    keyboardType: TextInputType.number,
+                    onChanged: (_){
+                      setState(() {
+                        code = verificationController.text;
+                      });
                     },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ], // Only numbers can be entered
                   ),
-               ],
-             ),
+                ),
+              ],
+            ),
+            Row(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: Text(
+                      "Verify"
+                  ),
+                  onPressed: () async {
+                    var isTelegramVerified = await ConnectorSetup().setupTelegramVerification(connectorId, code);
+                    if (isTelegramVerified){
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AllChats())
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

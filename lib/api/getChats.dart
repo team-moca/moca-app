@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
+import 'dart:convert' show utf8;
 
 
 
@@ -32,9 +33,10 @@ class GetChats {
         "Authorization":"Bearer "+ token,
         "Content-Type": "application/json; charset=UTF-8",
       }
-
     );
     if (response.statusCode == 200) {
+      print("BODY");
+      print(response.body);
       return response.body;
     } else {
       throw Exception(response.statusCode);

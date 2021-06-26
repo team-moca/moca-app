@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 class Data{
 
   void populateDb(Database database, int version) async {
-    //await database.execute("DROP TABLE Messages");
     await database.execute("CREATE TABLE Messages ("
         "message_id INTEGER PRIMARY KEY,"
         "contact_id INTEGER,"
@@ -19,7 +18,6 @@ class Data{
         ")");
 
 
-    //await database.execute("DROP TABLE Chats");
     await database.execute("CREATE TABLE Chats ("
         "chat_id INTEGER PRIMARY KEY,"
         "contact_id INTEGER,"
@@ -29,7 +27,6 @@ class Data{
         "is_muted BOOL"
         ")");
 
-    //await database.execute("DROP TABLE Contacts");
     await database.execute("CREATE TABLE Contacts ("
         "contact_id INTEGER PRIMARY KEY,"
         "service_id INTEGER,"

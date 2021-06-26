@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/screens/AllChatsRoute.dart';
 import 'package:moca_application/screens/NewConnectorCreation.dart';
+import 'package:flutter/services.dart';
+import 'package:moca_application/api/connectorSetup.dart';
+import 'package:moca_application/api/connectorSetup.dart';
 import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
 import 'package:moca_application/screens/NewChatRoute.dart';
@@ -14,22 +17,28 @@ import 'package:moca_application/api/getChats.dart';
 
 
 
-class NewConnector extends StatefulWidget {
-  //final String chats;
-  // Overview({Key key, @required this.chats}) : super(key: key);
+class WhatsAppVerificationRoute extends StatefulWidget {
+
+  final int connectorID;
+  WhatsAppVerificationRoute({Key key, @required this.connectorID}) : super(key: key);
+
 
   @override
-  _NewConnector  createState() => _NewConnector ();
+  _WhatsAppVerificationRoute  createState() => _WhatsAppVerificationRoute ();
 }
 
-class _NewConnector  extends State<NewConnector > {
+class _WhatsAppVerificationRoute  extends State<WhatsAppVerificationRoute > {
+
+  String code;
+  final verificationController = TextEditingController();
+
 
 
   @override
   Widget build(BuildContext context) {
     // chats come from Overview to _Overview
     // var chats = jsonDecode(widget.chats);
-
+    var connectorId = widget.connectorID;
 
     return MaterialApp(
       home: Scaffold(
@@ -39,7 +48,7 @@ class _NewConnector  extends State<NewConnector > {
           backgroundColor: Colors.grey[300],
           elevation: 0,
           title: Text(
-            "CONNECTORS",
+            "VERIFY WHATSAPP",
             style: TextStyle(
               letterSpacing: 2.5,
             ),
@@ -47,7 +56,7 @@ class _NewConnector  extends State<NewConnector > {
           centerTitle: true,
         ),
 
-        drawer: Drawer(
+        /* drawer: Drawer(
           child: ListView(
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
@@ -57,14 +66,6 @@ class _NewConnector  extends State<NewConnector > {
                 decoration: BoxDecoration(
                   color:  Colors.grey[300],
                 ),
-              ),
-              ListTile(
-                title: Text('Chats'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => AllChats()));
-                },
               ),
               ListTile(
                 title: Text('Add service'),
@@ -92,28 +93,13 @@ class _NewConnector  extends State<NewConnector > {
               ),
             ],
           ),
-        ),
+        ),*/
 
-        body: Column(
-          children: [
-            Text("You have not set up any connectors yet."),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    child: Text(
-                      "Add new connector"
-                    ),
-                    onPressed: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NewConnectorCreation()));
-                    },
-                  ),
-               ],
-             ),
-          ],
-        ),
+        body: Center(
+          child: Text(
+              'Service created sucessfully. Please visit WhatsApp, open your settings and use"WhatsApp Web" - "Add device" to scan the QR-Code shown in the server log.'
+          ),
+        )
       ),
     );
   }

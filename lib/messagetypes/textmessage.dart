@@ -5,23 +5,15 @@ class TextMessage {
 
   Widget createTextMessage(message){
 
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              RichText(
-                text: TextSpan(
-                  text:(message["message"]["content"]),
-                  style: TextStyle(color: Colors.black),
-                )
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+          child: Text(
+            message["message"]["content"],
+            style: TextStyle(
+                color: Colors.black
+            ),
+            textAlign: TextAlign.left,
           ),
-        ),
     );
   }
 }

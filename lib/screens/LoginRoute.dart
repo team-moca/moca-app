@@ -27,11 +27,18 @@ class _LoginRouteState extends State<LoginRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        elevation: 0,
         title: Text("login screen"),
       ),
       body: Center(
 
-        child:  DataInput(),
+        child:  Column(
+          children: [
+
+            DataInput(),
+          ],
+        ),
 
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -90,12 +97,10 @@ class _DataInput extends State<DataInput> {
             ),
             ElevatedButton(
               onPressed: () async {
-                print("hallo");
                 http.Response response = await Login().login(usernameController.text, passwordController.text);
                 //todo: check the response of Login().login -> if status code != 200 show error
-                print("hallo");
                 if(response.statusCode==200){
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
                     MaterialPageRoute(builder: (context) => AllChats()),

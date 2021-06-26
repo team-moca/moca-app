@@ -5,12 +5,11 @@ import 'package:moca_application/database/database.dart';
 
 class GetFromDatabase{
 
-  Future<List> getAllChats() async {
+  Future<String> getAllChats() async {
     Database db = await Data().createDatabase();
     var result = await db.query("Chats", columns: ["chat_id", "contact_id", "name", "last_message", "connector_id", "is_muted"]);
     print("CHATS:");
-    print(result);
-    return result;
+    return result.toString();
   }
 
   Future<List> getAllContacts() async {

@@ -44,14 +44,19 @@ class MessageType {
 
   Future<Widget> whoIsOwner(String messageType,msg) async {
 
-    int comparator = await Token().yourId();
+    int comparator = int.parse(await Token().yourId());
     if(msg["contact_id"] == comparator){
       return Container(
           decoration: BoxDecoration(
           color:  Color(0xffd5e1df),
     borderRadius: BorderRadius.circular(12),
     ),
-    child:identifyMessage(messageType,msg));
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        identifyMessage(messageType,msg),
+      ],
+    ));
     }else{
       return Container(
       decoration: BoxDecoration(

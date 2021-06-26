@@ -13,7 +13,6 @@ class InitApplication{
 
 
   Future<Widget> init() async {
-    print("init Application");
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getString("token")!=null){
       Authentication().refreshToken();

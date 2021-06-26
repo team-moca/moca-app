@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:moca_application/screens/LoginChat.dart';
+import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/screens/NewConnectorRoute.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
 import 'package:moca_application/screens/NewChatRoute.dart';
 import 'package:moca_application/screens/LoginRoute.dart';
+import 'package:moca_application/helper/TransformDatetime.dart';
+import 'package:moca_application/helper/CreateAvatar.dart';
+
+
 import 'package:moca_application/screens/NewConnectorRoute.dart';
 
 
@@ -64,6 +68,14 @@ class _AllChats extends State<AllChats> {
                 ),
               ),
               ListTile(
+                title: Text('Chats'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => AllChats()));
+                },
+              ),
+              ListTile(
                 title: Text('Add service'),
                 onTap: () {
                   Navigator.push(
@@ -83,7 +95,7 @@ class _AllChats extends State<AllChats> {
                 title: Text('Log Out'),
                 onTap:  () async {
                   await Logout().logout();
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => LoginRoute()));
                 },
@@ -115,70 +127,68 @@ class _AllChats extends State<AllChats> {
                             //each is a chat
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-                              child: Dismissible(
-                                //dismissible needs key to identify witch dismissible is meant
-                                key: Key(chat),
-                                onDismissed: (direction) {
-                                  // Remove the item from the data source.
-                                  setState(() {
-                                    //TODO: remove chat from screen
-                                    //TODO: call api with DELETE /chats/$id
-                                  });
-                                },
-                                background: Container(color: Colors.redAccent[100]),
-                                child: ListTile(
-                                  title: Text("$chat"),
-                                  //TODO: replace flutter logo with chats' profile picture
-                                  leading: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FutureBuilder(
-                                        future: Users().getContactAvatar(chats[index]),
-                                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                                          Widget children;
-                                          if (snapshot.hasData) {
-                                            children = Image.network(
-                                              "${snapshot.data}",
-                                              height: 40,);
-                                          }else if (snapshot.hasError) {
-                                            print(snapshot.error);
-                                            children = Icon(
-                                              Icons.error_outline,
-                                              color: Colors.red,
-                                              size: 40,
-                                            );
-                                          }else {
-                                            children = SizedBox(
-                                              child: Icon(
-                                                  Icons.account_circle_sharp,
-                                                  size:40),
-                                            );
-                                          }
-                                          return children;
-                                        },
+                              child: Column(
+                                children: [
+                                  Dismissible(
+                                    //dismissible needs key to identify witch dismissible is meant
+                                    key: Key(chat),
+                                    onDismissed: (direction) {
+                                      // Remove the item from the data source.
+                                      setState(() {
+                                        //TODO: remove chat from screen
+                                        //TODO: call api with DELETE /chats/$id
+                                      });
+                                    },
+                                    background: Container(color: Colors.redAccent[100]),
+                                    child: ListTile(
+                                      title: Text("$chat"),
+                                      //TODO: replace flutter logo with chats' profile picture
+                                      leading: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 40.0,
+                                            height: 40.0,
+                                            decoration: new BoxDecoration(
+                                              color: Colors.purple[200],
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                  CreateAvatar().create(chats[index]["name"]),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                      )
+                                              ,
+                                           ),
+                                            )
+                                          )
+                                      ],
                                       ),
-                                      //   )
-                                    ],
+                                      //TODO: if last message is image or video, display text
+                                      subtitle:Text (chats[index]["last_message"]["message"]["content"]!=null ? (chats[index]["last_message"]["message"]["content"]) : "Mediendatei"),
+                                      //TODO: format text for time of last message -> time or days ago
+                                      trailing: Text(TransformDatetime().date(chats[index]["last_message"]["sent_datetime"]),
+                                          style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 10)),
+
+                                      onTap: () async {
+                                        var messages = await GetMessages().getMessages(chats[index]["chat_id"]);
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => ChatRoute(messages: messages, name: chats[index]["name"], chatId: chats[index]["chat_id"])),
+                                        );
+                                      },
+
+                                    ),
                                   ),
-                                  //TODO: if last message is image or video, display text
-                                  subtitle:Text (chats[index]["last_message"]["message"]["content"]!=null ? (chats[index]["last_message"]["message"]["content"]) : "Mediendatei"),
-                                  //TODO: format text for time of last message -> time or days ago
-                                  trailing: Text(chats[index]["last_message"]["sent_datetime"],
-                                      style: TextStyle(
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 10)),
-
-                                  onTap: () async {
-                                    var messages = await GetMessages().getMessages(chats[index]["chat_id"]);
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ChatRoute(messages: messages, name: chats[index]["name"], chatId: chats[index]["chat_id"])),
-                                    );
-                                  },
-
-                                ),
+                                  Divider()
+                                ],
                               ),
                             );
                           },

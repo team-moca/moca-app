@@ -81,7 +81,7 @@ class _DataInput extends State<DataInput> {
                             ElevatedButton(
                                 child: Text('okidoki'),
                                 onPressed: (){
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
                                     MaterialPageRoute(builder: (context) => LoginRoute()),
@@ -161,6 +161,8 @@ class _RegisterRouteState extends State<RegisterRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        elevation: 0,
         title: Text("Register"),
       ),
       body: Center(

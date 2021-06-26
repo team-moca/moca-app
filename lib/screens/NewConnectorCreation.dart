@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/api/connectorSetup.dart';
 import 'package:flutter/services.dart';
-import 'package:moca_application/screens/LoginChat.dart';
+import 'package:moca_application/screens/TelegramVerificationRoute.dart';
+import 'package:moca_application/screens/WhatsAppVerificationRoute.dart';
+
+import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
 import 'package:moca_application/screens/NewChatRoute.dart';
 import 'package:moca_application/screens/LoginRoute.dart';
@@ -11,6 +14,8 @@ import 'package:moca_application/api/getMessages.dart';
 import 'package:moca_application/api/logout.dart';
 import 'package:moca_application/helper/users.dart';
 import 'package:moca_application/api/getChats.dart';
+
+import 'AllChatsRoute.dart';
 
 
 
@@ -68,6 +73,53 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
           centerTitle: true,
         ),
 
+        drawer: Drawer(
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Text('display users name, initials and phone number'),
+                decoration: BoxDecoration(
+                  color:  Colors.grey[300],
+                ),
+              ),
+              ListTile(
+                title: Text('Chats'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => AllChats()));
+                },
+              ),
+              ListTile(
+                title: Text('Add service'),
+                onTap: () {
+                  // Update the state of the app.
+                  // Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Settings'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsRoute()));
+                },
+              ),
+              ListTile(
+                title: Text('Log Out'),
+                onTap:  () async {
+                  await Logout().logout();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginRoute()));
+                },
+              ),
+            ],
+          ),
+        ),
+
         body: Column(
           children: [
             Row(
@@ -119,28 +171,57 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                   onPressed: () async {
                     getDropDownItem();
                     phone = transformPhone(phone);
-                    print("AUSWAHL:+ $phone");
 
                     //todo: add whatsapp, does not work yet
-                    String newConnector = await ConnectorSetup().createConnector(holder);
-                    if(newConnector!=""){
+                    print("HOLDER");
+                    print(holder.toLowerCase());
+                    String newConnector = await ConnectorSetup()
+                        .createConnector(holder.toLowerCase());
+                    if (newConnector != "") {
                       var connectorID = jsonDecode(newConnector)["connector_id"];
-                      var result  = await ConnectorSetup().setupConnector(connectorID, phone) ;
-                      print(result);
-                    }else{
+                      var result = await ConnectorSetup().setupConnector(connectorID, phone, jsonDecode(newConnector)["connector_type"]);
+
+                      if (connectorID == "whatsapp") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>
+                              WhatsAppVerificationRoute(
+                                  connectorID: connectorID)),
+                        );
+                      } else if (result == "telegram") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>
+                                TelegramVerificationRoute(
+                                    connectorID: connectorID)),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    'Oops, the server is currently unreachable'),
+                              );
+                            },
+                          );
+                        }
+
+                    } else {
                       showDialog(
                         context: context,
                         barrierDismissible: true,
-                        builder: (BuildContext context){
+                        builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Oops, the server is currently unreachable'),
+                            title: Text(
+                                'Oops, the server is currently unreachable'),
                           );
                         },
                       );
-                    }
-
+                    };
                   },
-                ),
+                )
               ],
             ),
         ],

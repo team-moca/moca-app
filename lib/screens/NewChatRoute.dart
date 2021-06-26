@@ -5,6 +5,8 @@ class NewChatRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        elevation: 0,
         title: Text("START NEW CHAT"),
       ),
       body: Center(

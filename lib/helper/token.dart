@@ -21,9 +21,10 @@ class Token {
 
   }
 
-  Future<int> yourId() async {
+  Future<String> yourId() async {
     var decryptedToken = await decryptToken();
-    return decryptedToken["user_id"];
+    print(decryptedToken);
+    return decryptedToken["sub"];
   }
 
 }

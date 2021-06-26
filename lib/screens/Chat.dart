@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:moca_application/messagetypes/messageType.dart';
 import 'package:moca_application/api/sendMessage.dart';
 import 'package:moca_application/helper/token.dart';
+import 'package:moca_application/helper/CreateAvatar.dart';
 import 'package:moca_application/helper/token.dart';
 import 'package:moca_application/screens/ContactViewRoute.dart';
 //import  'package:keyboard_actions/keyboard_actions.dart';
@@ -69,7 +70,25 @@ class _ChatRouteState extends State<ChatRoute> {
                 backgroundColor: Colors.grey[300],
                 title: Text("$name"),
                 actions: [
-                  FlutterLogo(size: 50),
+                  /*Container(
+                      width: 40.0,
+                      height: 40.0,
+                      decoration: new BoxDecoration(
+                        color: Colors.purple[200],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          CreateAvatar().create(name),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          )
+                          ,
+                        ),
+                      )
+                  ),*/
                   IconButton(
                     icon: Icon(Icons.menu),
                     onPressed: () {
@@ -94,14 +113,13 @@ class _ChatRouteState extends State<ChatRoute> {
                           future:  MessageType().whoIsOwner(message["message"]["type"], message),
                           builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                             Widget child;
+                            print("CHILD");
+                            print(snapshot);
                             if (snapshot.hasData) {
                               child = snapshot.data;
+                              print(child);
                             }else if (snapshot.hasError) {
-                              child = Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                                size: 40,
-                              );
+                              child = Text("oops, something went wrong");
                             }else {
                               child = SizedBox(
                                 child: Icon(
@@ -146,7 +164,7 @@ class _ChatRouteState extends State<ChatRoute> {
                       FloatingActionButton(
                         onPressed: () async {
                           print("send message button clicked");
-                          yourId = await Token().yourId();
+                          yourId = int.parse(await Token().yourId());
                           setState(() {
                             i=1;
 
@@ -156,13 +174,12 @@ class _ChatRouteState extends State<ChatRoute> {
 
                               messages.add({
                                 "message_id": messages[messages.length-1]["message_id"]-1,
-                                //TODO: contact_id should be own id, received from auth token -> write function for that
                                 "contact_id": yourId,
                                 "message":{
                                   "type":"text",
                                   "content": messageController.text
                                 },
-                                "sent_datetime": "2020-11-11T09:02:30"
+                                "sent_datetime": DateTime.now()
                               });
 
                               print(messages.last);
