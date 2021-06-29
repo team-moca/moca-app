@@ -7,12 +7,14 @@ class TextMessage {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-          child: Text(
-            message["message"]["content"],
-            style: TextStyle(
-                color: Colors.black
+          child: Container(
+            child: Text(
+              message["message"]["content"],
+              style: TextStyle(
+                  color: Colors.black
+              ),
+              textAlign: TextAlign.left,
             ),
-            textAlign: TextAlign.left,
           ),
     );
   }

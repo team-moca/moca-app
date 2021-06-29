@@ -1,20 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moca_application/screens/AllChatsRoute.dart';
-import 'package:moca_application/screens/NewConnectorCreation.dart';
-import 'package:flutter/services.dart';
-import 'package:moca_application/api/connectorSetup.dart';
-import 'package:moca_application/api/connectorSetup.dart';
-import 'package:moca_application/screens/Chat.dart';
-import 'package:moca_application/screens/SettingsRoute.dart';
-import 'package:moca_application/screens/NewChatRoute.dart';
-import 'package:moca_application/screens/LoginRoute.dart';
-
-import 'dart:convert';
-import 'package:moca_application/api/getMessages.dart';
-import 'package:moca_application/api/logout.dart';
-import 'package:moca_application/helper/users.dart';
-import 'package:moca_application/api/getChats.dart';
-
 
 
 class WhatsAppVerificationRoute extends StatefulWidget {
@@ -41,6 +25,7 @@ class _WhatsAppVerificationRoute  extends State<WhatsAppVerificationRoute > {
     var connectorId = widget.connectorID;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey[100],
 

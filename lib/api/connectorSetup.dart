@@ -69,7 +69,6 @@ class ConnectorSetup{
     if(response.statusCode == 200){
       return response.body;
     }else{
-      print("o nooooooooo");
       return "";
     }
   }

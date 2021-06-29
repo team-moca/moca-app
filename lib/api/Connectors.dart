@@ -6,11 +6,11 @@ import 'package:moca_application/api/apiInfo.dart';
 
 
 
-class GetContacts {
+class Connectors {
 
-  final URL = ApiInfo().url() + "/contacts?count=400";
+  final URL = ApiInfo().url() + "/connectors";
 
-  Future<String> getToken() async {
+  Future<String> getConnectors() async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     return token;
@@ -31,15 +31,13 @@ class GetContacts {
 
     );
 
-    print("TESTESTESTETSTETS");
-    print(response.body);
-
     if (response.statusCode == 200) {
       //print(response.body);
       return response.body;
     } else {
       // throw an exception.
       throw Exception(response.statusCode);
+      return response.body;
       return null;
     }
   }

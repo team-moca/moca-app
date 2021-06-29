@@ -8,7 +8,9 @@ void main() async {
 
 
     WidgetsFlutterBinding.ensureInitialized();
-    runApp(MaterialApp(home: await InitApplication().init() ,
+        runApp(MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: await InitApplication().init() ,
     ));
 }
 

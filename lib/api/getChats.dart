@@ -11,7 +11,7 @@ import 'dart:convert' show utf8;
 
 class GetChats {
 
-  final URL = ApiInfo().url() + "/chats";
+  final URL = ApiInfo().url() + "/chats?count=200";
 
   //for testing
   Future<String> getToken() async {

@@ -31,7 +31,7 @@ class MessageType {
       default: {
         return  RichText(
               text: TextSpan(
-                  text:("what is dis?"),
+                  text:("unknown messagetype"),
 
               )
           //TODO max width, bg color, padding, align left / right
@@ -47,23 +47,30 @@ class MessageType {
     int comparator = int.parse(await Token().yourId());
     if(msg["contact_id"] == comparator){
       return Container(
-          decoration: BoxDecoration(
-          color:  Color(0xffd5e1df),
+        padding: new EdgeInsets.fromLTRB(40, 4, 0, 0),
+        child: Container(
+            decoration: BoxDecoration(
+            color:  Colors.grey[300],
     borderRadius: BorderRadius.circular(12),
+
     ),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        identifyMessage(messageType,msg),
-      ],
-    ));
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          identifyMessage(messageType,msg),
+        ],
+    )),
+      );
     }else{
       return Container(
-      decoration: BoxDecoration(
-      color:  Color(0xffdeeaee),
+        padding: new EdgeInsets.fromLTRB(0, 4, 40, 0),
+        child: Container(
+            decoration: BoxDecoration(
+        color: Colors.brown[200],
     borderRadius: BorderRadius.circular(12),
     ),
-    child:identifyMessage(messageType,msg));
+    child:identifyMessage(messageType,msg)),
+      );
     }
   }
 }

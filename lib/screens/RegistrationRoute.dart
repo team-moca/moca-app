@@ -36,96 +36,108 @@ class _DataInput extends State<DataInput> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-                  labelText: 'Enter your username'
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(20,0, 20, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/mocaAppIcon.png",
+                height: 70,
+                width: 70,
               ),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                  labelText: 'Enter your password'
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                    labelText: 'Enter your username'
+                ),
               ),
-              obscureText: true,
-              autofocus: false,
-            ),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                  labelText: 'Enter your email'
+              TextField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                    labelText: 'Enter your password'
+                ),
+                obscureText: true,
+                autofocus: false,
               ),
-            ),
-            TextField(
-              controller: emailVerifyController,
-              decoration: InputDecoration(
-                  labelText: 'Enter your email'
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                    labelText: 'Enter your email'
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (verifyInput(usernameController.text, passwordController.text , emailController.text,  emailVerifyController.text)){
-                  http.Response response = await Register().register(usernameController.text , passwordController.text , emailController.text);
-                  if(response.statusCode==200){
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context){
-                        return AlertDialog(
-                          title: Text('Account created'),
-                          actions: <Widget>[
-                            ElevatedButton(
-                                child: Text('okidoki'),
-                                onPressed: (){
-                                  Navigator.pushReplacement(
-                                    context,
-                                    //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
-                                    MaterialPageRoute(builder: (context) => LoginRoute()),
-                                  );
-                                }
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }else{
-                    usernameController.clear();
-                    passwordController.clear();
-                    emailController.clear();
-                    emailVerifyController.clear();
+              TextField(
+                controller: emailVerifyController,
+                decoration: InputDecoration(
+                    labelText: 'Enter your email'
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (verifyInput(usernameController.text, passwordController.text , emailController.text,  emailVerifyController.text)){
+                    http.Response response = await Register().register(usernameController.text , passwordController.text , emailController.text);
+                    if(response.statusCode==200){
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text('Your account has been created!'),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                  child: Text('Continue'),
+                                  onPressed: (){
+                                    Navigator.pushReplacement(
+                                      context,
+                                      //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
+                                      MaterialPageRoute(builder: (context) => LoginRoute()),
+                                    );
+                                  }
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }else{
+                      usernameController.clear();
+                      passwordController.clear();
+                      emailController.clear();
+                      emailVerifyController.clear();
 
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text('Oops, this username is already taken.'),
+                          );
+                        },
+                      );
+
+                    }
+
+                  }else{
                     showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (BuildContext context){
                         return AlertDialog(
-                          title: Text('Oops, username already taken'),
+                          title: Text('Your given data does not not fulfill the requirements.'),
                         );
                       },
                     );
-
                   }
-
-                }else{
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text('Input does not fulfill requirements'),
-                      );
-                    },
-                  );
-                }
-
-              },
-              child: Text('Register'),
-            ),
-          ],
+                },
+                child: Text('Register'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -163,7 +175,13 @@ class _RegisterRouteState extends State<RegisterRoute> {
       appBar: AppBar(
         backgroundColor: Colors.grey[300],
         elevation: 0,
-        title: Text("Register"),
+        title: Text(
+          "Create your account",
+          style: TextStyle(
+            letterSpacing: 2.5,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Center(
 

@@ -2,19 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moca_application/screens/AllChatsRoute.dart';
 import 'package:moca_application/api/login.dart';
 import 'package:http/http.dart' as http;
-import 'package:moca_application/api/getChats.dart';
-import 'dart:convert' as JSON;
-import 'package:moca_application/database/getFromDatabase.dart';
-
-import 'package:moca_application/helper/token.dart';
-
-
-import 'package:moca_application/api/Authentication.dart';
-import 'dart:async';
-
 import 'package:moca_application/screens/RegistrationRoute.dart';
-
-
 
 
 class LoginRoute extends StatefulWidget {
@@ -26,17 +14,37 @@ class _LoginRouteState extends State<LoginRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[300],
-        elevation: 0,
-        title: Text("login screen"),
-      ),
       body: Center(
 
         child:  Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-            DataInput(),
+            Image.asset(
+              "assets/mocaAppIcon.png",
+              height: 120,
+              width: 120,
+            ),
+
+            Center(
+                child:Container(
+                    constraints: BoxConstraints(minWidth: 100, maxWidth: 250),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0,20, 0, 0),
+                      child: Text("Welcome to MOCA. It´s nice to see you.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    )
+                )
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: DataInput(),
+            ),
           ],
         ),
 
@@ -48,6 +56,7 @@ class _LoginRouteState extends State<LoginRoute> {
             MaterialPageRoute(builder: (context) => RegisterRoute()),
           );        },
         label: Text('Sign up'),
+        backgroundColor: Colors.brown[400],
 
       ),
     );
@@ -111,7 +120,7 @@ class _DataInput extends State<DataInput> {
                     barrierDismissible: true,
                     builder: (BuildContext context){
                       return AlertDialog(
-                        title: Text('Oops, the server is currently unreachable'),
+                        title: Text('Oops, the server is currently unreachable.'),
                       );
                     },
                   );
@@ -123,13 +132,16 @@ class _DataInput extends State<DataInput> {
                     barrierDismissible: true,
                     builder: (BuildContext context){
                       return AlertDialog(
-                        title: Text('Oops, username or password wrong'),
+                        title: Text('Oops, username or password wrong.'),
                       );
                     },
                   );
                 }
               },
               child: Text('Login'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
+              ),
             ),
           ],
         );

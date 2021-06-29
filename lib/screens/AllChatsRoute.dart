@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:moca_application/helper/token.dart';
 import 'package:moca_application/screens/Chat.dart';
-import 'package:moca_application/screens/NewConnectorRoute.dart';
+import 'package:moca_application/screens/NewConnectorCreation.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
 import 'package:moca_application/screens/NewChatRoute.dart';
 import 'package:moca_application/screens/LoginRoute.dart';
 import 'package:moca_application/helper/TransformDatetime.dart';
 import 'package:moca_application/helper/CreateAvatar.dart';
-
-
-import 'package:moca_application/screens/NewConnectorRoute.dart';
-
-
 import 'dart:convert';
 import 'package:moca_application/api/getMessages.dart';
 import 'package:moca_application/api/logout.dart';
-import 'package:moca_application/helper/users.dart';
 import 'package:moca_application/api/getChats.dart';
-
 
 
 class AllChats extends StatefulWidget {
@@ -41,6 +35,7 @@ class _AllChats extends State<AllChats> {
 
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey[100],
 
@@ -62,7 +57,51 @@ class _AllChats extends State<AllChats> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('display users name, initials and phone number'),
+                child: Center(child:
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/mocaAppIcon.png",
+                      height: 70,
+                      width: 70,
+                    ),
+                    FutureBuilder(
+                      future:  Token().getUsername(),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        Widget children;
+                        if (snapshot.hasData) {
+                          var text = snapshot.data;
+                          while(text==null){print("");}
+                          children = Center(
+                              child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        text,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                          ));
+                        }else if (snapshot.hasError) {
+                          children = Center(
+                            child: Text("no username found"),
+                          );
+                        }else {
+
+                          children = SizedBox(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return children;
+                      },
+                    ),
+                  ],
+                ),
+                ),
                 decoration: BoxDecoration(
                   color:  Colors.grey[300],
                 ),
@@ -75,14 +114,18 @@ class _AllChats extends State<AllChats> {
                       MaterialPageRoute(builder: (context) => AllChats()));
                 },
               ),
+              Divider(),
               ListTile(
                 title: Text('Add service'),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NewConnector()));
-                },
+                  context,
+                  MaterialPageRoute(builder: (context) => NewConnectorCreation()));
+                  },
+                  // Update the state of the app.
+                  // Navigator.pop(context);
               ),
+              Divider(),
               ListTile(
                 title: Text('Settings'),
                 onTap: () {
@@ -91,15 +134,17 @@ class _AllChats extends State<AllChats> {
                       MaterialPageRoute(builder: (context) => SettingsRoute()));
                 },
               ),
+              Divider(),
               ListTile(
                 title: Text('Log Out'),
                 onTap:  () async {
                   await Logout().logout();
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginRoute()));
                 },
               ),
+              Divider(),
             ],
           ),
         ),
@@ -115,34 +160,19 @@ class _AllChats extends State<AllChats> {
                   future:  GetChats().getChats(),
                     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                       Widget children;
-
-                      if (snapshot.hasData) {
-                        print(snapshot.data.toString());
+                      if (snapshot.hasData && snapshot.data != null) {
                         var chats = jsonDecode(snapshot.data);
                         while(chats==null){print("");}
                         children = ListView.builder(
                           itemCount:chats.length,
                           itemBuilder: (context, index) {
                             var chat = chats[index]["name"];
-                            //each is a chat
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
                               child: Column(
                                 children: [
-                                  Dismissible(
-                                    //dismissible needs key to identify witch dismissible is meant
-                                    key: Key(chat),
-                                    onDismissed: (direction) {
-                                      // Remove the item from the data source.
-                                      setState(() {
-                                        //TODO: remove chat from screen
-                                        //TODO: call api with DELETE /chats/$id
-                                      });
-                                    },
-                                    background: Container(color: Colors.redAccent[100]),
-                                    child: ListTile(
+                                  ListTile(
                                       title: Text("$chat"),
-                                      //TODO: replace flutter logo with chats' profile picture
                                       leading: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -150,7 +180,7 @@ class _AllChats extends State<AllChats> {
                                             width: 40.0,
                                             height: 40.0,
                                             decoration: new BoxDecoration(
-                                              color: Colors.purple[200],
+                                              color: Colors.brown[400],
                                               shape: BoxShape.circle,
                                             ),
                                             child: Center(
@@ -186,7 +216,6 @@ class _AllChats extends State<AllChats> {
                                       },
 
                                     ),
-                                  ),
                                   Divider()
                                 ],
                               ),
@@ -198,16 +227,37 @@ class _AllChats extends State<AllChats> {
                       }else if (snapshot.hasError) {
                         print("Could not load chats: "+snapshot.error.toString());
 
-                        children = Container(
-                          child: Text("something went wrong, we could not receive any chats - TODO: case for chats are empty"),
+                        children = Center(
+                            child:Container(
+                                constraints: BoxConstraints(minWidth: 100, maxWidth: 250),
+                                child: Text("Welcome to MOCA! You don't have any chats yet. Start by adding a new connector.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                  ),
+                                )
+                            )
                         );
                       }else {
-
+                        if(snapshot.hasData){
+                          children = Center(
+                              child:Container(
+                                  constraints: BoxConstraints(minWidth: 100, maxWidth: 250),
+                                  child: Text("Welcome to MOCA! You don't have any chats yet. Start by adding a new connector.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                    ),
+                                  )
+                                )
+                          );
+                        }else{
                         children = SizedBox(
                           child: Center(
                             child: CircularProgressIndicator(),
                           ),
                         );
+                        }
                       }
                       return children;
                     },
@@ -218,13 +268,13 @@ class _AllChats extends State<AllChats> {
               ),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.end  ,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                   child: FloatingActionButton(
                     child: Icon(Icons.add),
-                    backgroundColor: Colors.purple[300],
+                    backgroundColor: Colors.brown[400],
                     onPressed:()  {
                       Navigator.push(
                         context,

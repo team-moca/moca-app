@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:moca_application/messagetypes/messageType.dart';
 import 'package:moca_application/api/sendMessage.dart';
 import 'package:moca_application/helper/token.dart';
-import 'package:moca_application/helper/CreateAvatar.dart';
-import 'package:moca_application/helper/token.dart';
-import 'package:moca_application/screens/ContactViewRoute.dart';
-//import  'package:keyboard_actions/keyboard_actions.dart';
+import 'package:flutter/gestures.dart';
+import 'dart:async';
+import 'dart:ui';
+
+
 
 
 
@@ -23,8 +24,10 @@ class ChatRoute extends StatefulWidget {
   _ChatRouteState createState() => _ChatRouteState();
 }
 
+
 class _ChatRouteState extends State<ChatRoute> {
 
+  ScrollController _scrollController = new ScrollController();
   final messageController = TextEditingController();
   int i= 0;
   int yourId;
@@ -38,6 +41,7 @@ class _ChatRouteState extends State<ChatRoute> {
     messageController.dispose();
     super.dispose();
   }
+
 
     @override
     Widget build(BuildContext context) {
@@ -53,6 +57,7 @@ class _ChatRouteState extends State<ChatRoute> {
 
 
       return MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: WillPopScope(
             child: Scaffold(
               backgroundColor: Colors.grey[100],
@@ -68,41 +73,26 @@ class _ChatRouteState extends State<ChatRoute> {
                   ],
                 ),
                 backgroundColor: Colors.grey[300],
-                title: Text("$name"),
-                actions: [
-                  /*Container(
-                      width: 40.0,
-                      height: 40.0,
-                      decoration: new BoxDecoration(
-                        color: Colors.purple[200],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          CreateAvatar().create(name),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          )
-                          ,
-                        ),
-                      )
-                  ),*/
-                  IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () {
-                      //TODO Navigate to ChatSettings
-                      // Navigator.push(context
-                      //MaterialPageRoute(builder: (context) => ChatSettings()),
-
-                    },)
-                ],
+                title: RichText(
+                  text:  TextSpan(
+                      text: "$name",
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print('The button is clicked!');
+                        },
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        letterSpacing: 2.5,
+                      )),
+                ),
               ),
               body: Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: messages.length,
@@ -113,11 +103,8 @@ class _ChatRouteState extends State<ChatRoute> {
                           future:  MessageType().whoIsOwner(message["message"]["type"], message),
                           builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                             Widget child;
-                            print("CHILD");
-                            print(snapshot);
                             if (snapshot.hasData) {
                               child = snapshot.data;
-                              print(child);
                             }else if (snapshot.hasError) {
                               child = Text("oops, something went wrong");
                             }else {
@@ -163,7 +150,6 @@ class _ChatRouteState extends State<ChatRoute> {
                       ),
                       FloatingActionButton(
                         onPressed: () async {
-                          print("send message button clicked");
                           yourId = int.parse(await Token().yourId());
                           setState(() {
                             i=1;
@@ -172,7 +158,7 @@ class _ChatRouteState extends State<ChatRoute> {
 
                               SendMessage().textMessage(messageController.text, chatId);
 
-                              messages.add({
+                              messages.insert(0, {
                                 "message_id": messages[messages.length-1]["message_id"]-1,
                                 "contact_id": yourId,
                                 "message":{
@@ -181,6 +167,12 @@ class _ChatRouteState extends State<ChatRoute> {
                                 },
                                 "sent_datetime": DateTime.now()
                               });
+
+                              _scrollController.animateTo(
+                                _scrollController.position.minScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
 
                               print(messages.last);
 
@@ -210,6 +202,3 @@ class _ChatRouteState extends State<ChatRoute> {
       
     }
   }
-
-
-

@@ -18,13 +18,16 @@ class Token {
  Future<DateTime> getExpirationDate() async {
       String yourToken = await Authentication().getToken();
       return JwtDecoder.getExpirationDate(yourToken);
-
   }
 
   Future<String> yourId() async {
     var decryptedToken = await decryptToken();
-    print(decryptedToken);
     return decryptedToken["sub"];
+  }
+
+  Future<String> getUsername() async {
+    var decryptedToken = await decryptToken();
+    return decryptedToken["username"];
   }
 
 }

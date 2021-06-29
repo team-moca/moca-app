@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/screens/AllChatsRoute.dart';
 import 'package:moca_application/screens/NewConnectorCreation.dart';
-import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/screens/SettingsRoute.dart';
-import 'package:moca_application/screens/NewChatRoute.dart';
 import 'package:moca_application/screens/LoginRoute.dart';
-
-import 'dart:convert';
-import 'package:moca_application/api/getMessages.dart';
 import 'package:moca_application/api/logout.dart';
-import 'package:moca_application/helper/users.dart';
-import 'package:moca_application/api/getChats.dart';
-
+import 'package:moca_application/helper/token.dart';
 
 
 class NewConnector extends StatefulWidget {
@@ -32,6 +25,7 @@ class _NewConnector  extends State<NewConnector > {
 
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey[100],
 
@@ -53,7 +47,51 @@ class _NewConnector  extends State<NewConnector > {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('display users name, initials and phone number'),
+                child: Center(child:
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/connector.png",
+                      height: 70,
+                      width: 70,
+                    ),
+                    FutureBuilder(
+                      future:  Token().getUsername(),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        Widget children;
+                        if (snapshot.hasData) {
+                          var text = snapshot.data;
+                          while(text==null){print("");}
+                          children = Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  text,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ));
+                        }else if (snapshot.hasError) {
+                          children = Center(
+                            child: Text("no username found"),
+                          );
+                        }else {
+
+                          children = SizedBox(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return children;
+                      },
+                    ),
+                  ],
+                ),
+                ),
                 decoration: BoxDecoration(
                   color:  Colors.grey[300],
                 ),
@@ -66,13 +104,18 @@ class _NewConnector  extends State<NewConnector > {
                       MaterialPageRoute(builder: (context) => AllChats()));
                 },
               ),
+              Divider(),
               ListTile(
                 title: Text('Add service'),
                 onTap: () {
-                  // Update the state of the app.
-                  // Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NewConnectorCreation()));
                 },
+                // Update the state of the app.
+                // Navigator.pop(context);
               ),
+              Divider(),
               ListTile(
                 title: Text('Settings'),
                 onTap: () {
@@ -81,6 +124,7 @@ class _NewConnector  extends State<NewConnector > {
                       MaterialPageRoute(builder: (context) => SettingsRoute()));
                 },
               ),
+              Divider(),
               ListTile(
                 title: Text('Log Out'),
                 onTap:  () async {
@@ -90,13 +134,16 @@ class _NewConnector  extends State<NewConnector > {
                       MaterialPageRoute(builder: (context) => LoginRoute()));
                 },
               ),
+              Divider(),
             ],
           ),
         ),
-
         body: Column(
           children: [
-            Text("You have not set up any connectors yet."),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+              child: Text("You have not set up any connectors yet."),
+            ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -109,6 +156,9 @@ class _NewConnector  extends State<NewConnector > {
                           context,
                           MaterialPageRoute(builder: (context) => NewConnectorCreation()));
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
+                    ),
                   ),
                ],
              ),

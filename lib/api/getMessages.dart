@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
+import 'dart:io';
+import 'dart:convert';
+
 
 
 
@@ -21,7 +24,7 @@ class GetMessages {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     final URL = ApiInfo().url() + "/chats/"
-                       + userId.toString() +"/messages";
+                       + userId.toString() +"/messages?count=40";
 
     final http.Response response = await http.get(
         URL,
@@ -29,11 +32,10 @@ class GetMessages {
           "Authorization":"Bearer "+ token,
           "Content-Type": "application/json; charset=UTF-8",
         }
-
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("TESTESTESTETSTETST");
       return response.body;
     } else {
       // throw an exception.

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/api/logout.dart';
-
 import 'AllChatsRoute.dart';
 import 'LoginRoute.dart';
+import 'package:moca_application/helper/token.dart';
+import 'package:moca_application/screens/AllChatsRoute.dart';
+import 'package:moca_application/screens/NewConnectorCreation.dart';
+import 'package:moca_application/screens/LoginRoute.dart';
+
 
 class SettingsRoute extends StatelessWidget {
   @override
@@ -19,7 +23,51 @@ class SettingsRoute extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('display users name, initials and phone number'),
+              child: Center(child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/mocaAppIcon.png",
+                    height: 70,
+                    width: 70,
+                  ),
+                  FutureBuilder(
+                    future:  Token().getUsername(),
+                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      Widget children;
+                      if (snapshot.hasData) {
+                        var text = snapshot.data;
+                        while(text==null){print("");}
+                        children = Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                text,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ));
+                      }else if (snapshot.hasError) {
+                        children = Center(
+                          child: Text("no username found"),
+                        );
+                      }else {
+
+                        children = SizedBox(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      return children;
+                    },
+                  ),
+                ],
+              ),
+              ),
               decoration: BoxDecoration(
                 color:  Colors.grey[300],
               ),
@@ -32,13 +80,18 @@ class SettingsRoute extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AllChats()));
               },
             ),
+            Divider(),
             ListTile(
               title: Text('Add service'),
               onTap: () {
-                // Update the state of the app.
-                // Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewConnectorCreation()));
               },
+              // Update the state of the app.
+              // Navigator.pop(context);
             ),
+            Divider(),
             ListTile(
               title: Text('Settings'),
               onTap: () {
@@ -47,6 +100,7 @@ class SettingsRoute extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => SettingsRoute()));
               },
             ),
+            Divider(),
             ListTile(
               title: Text('Log Out'),
               onTap:  () async {
@@ -56,6 +110,7 @@ class SettingsRoute extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginRoute()));
               },
             ),
+            Divider(),
           ],
         ),
       ),
