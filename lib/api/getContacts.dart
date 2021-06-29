@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
-
+import 'dart:convert';
 
 
 class GetContacts {
@@ -31,17 +31,13 @@ class GetContacts {
 
     );
 
-    print("TESTESTESTETSTETS");
-    print(response.body);
-
     if (response.statusCode == 200) {
       //print(response.body);
-      return response.body;
+      return utf8.decode(response.bodyBytes);
     } else {
       // throw an exception.
       throw Exception(response.statusCode);
       return null;
     }
   }
-
 }

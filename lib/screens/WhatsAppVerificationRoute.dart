@@ -17,7 +17,6 @@ class _WhatsAppVerificationRoute  extends State<WhatsAppVerificationRoute > {
   final verificationController = TextEditingController();
 
 
-
   @override
   Widget build(BuildContext context) {
     // chats come from Overview to _Overview
@@ -40,47 +39,7 @@ class _WhatsAppVerificationRoute  extends State<WhatsAppVerificationRoute > {
           ),
           centerTitle: true,
         ),
-
-        /* drawer: Drawer(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('display users name, initials and phone number'),
-                decoration: BoxDecoration(
-                  color:  Colors.grey[300],
-                ),
-              ),
-              ListTile(
-                title: Text('Add service'),
-                onTap: () {
-                  // Update the state of the app.
-                  // Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()));
-                },
-              ),
-              ListTile(
-                title: Text('Log Out'),
-                onTap:  () async {
-                  await Logout().logout();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginRoute()));
-                },
-              ),
-            ],
-          ),
-        ),*/
-
-        body: Center(
+          body: Center(
           child: Text(
               'Service created sucessfully. Please visit WhatsApp, open your settings and use"WhatsApp Web" - "Add device" to scan the QR-Code shown in the server log.'
           ),

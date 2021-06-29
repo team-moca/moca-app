@@ -5,7 +5,6 @@ import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
 
 
-
 class SendMessage {
 
   Future<String> textMessage(String messageContent, int chatId) async {
@@ -34,7 +33,6 @@ class SendMessage {
       return response.body;
     } else {
       throw Exception("Unable to send message");
-      return null;
     }
 
   }

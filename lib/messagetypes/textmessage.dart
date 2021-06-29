@@ -1,4 +1,3 @@
-//TODO content from API
 import 'package:flutter/material.dart';
 
 class TextMessage {
@@ -11,6 +10,7 @@ class TextMessage {
             child: Text(
               message["message"]["content"],
               style: TextStyle(
+                fontSize: 16,
                   color: Colors.black
               ),
               textAlign: TextAlign.left,

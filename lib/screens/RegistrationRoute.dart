@@ -9,17 +9,12 @@ class DataInput extends StatefulWidget {
   _DataInput createState() => _DataInput();
 }
 
-// Define a corresponding State class.
-// This class holds the data related to the Form.
 class _DataInput extends State<DataInput> {
-  // Create a text controller and use it to retrieve the current value
-  // of the TextField.
+
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final emailVerifyController = TextEditingController();
-
-
 
 
   @override
@@ -66,6 +61,7 @@ class _DataInput extends State<DataInput> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
+
                     labelText: 'Enter your email'
                 ),
               ),
@@ -88,6 +84,9 @@ class _DataInput extends State<DataInput> {
                             title: Text('Your account has been created!'),
                             actions: <Widget>[
                               ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
+                                  ),
                                   child: Text('Continue'),
                                   onPressed: (){
                                     Navigator.pushReplacement(
@@ -125,7 +124,7 @@ class _DataInput extends State<DataInput> {
                       barrierDismissible: true,
                       builder: (BuildContext context){
                         return AlertDialog(
-                          title: Text('Your given data does not not fulfill the requirements.'),
+                          title: Text('Your given data does not fulfill the requirements.'),
                         );
                       },
                     );

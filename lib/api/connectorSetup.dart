@@ -92,7 +92,7 @@ class ConnectorSetup{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
-          "phone" : "+4917634614265"
+          "phone" : "$phone"
         })
     );
     print(response.body);
@@ -119,7 +119,6 @@ class ConnectorSetup{
           "verification_code" : code
         })
     );
-    print (jsonDecode(response.body));
 
     if(response.statusCode==200)return true;
     else return false;

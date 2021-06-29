@@ -4,19 +4,18 @@ import 'package:moca_application/messagetypes/messageType.dart';
 import 'package:moca_application/api/sendMessage.dart';
 import 'package:moca_application/helper/token.dart';
 import 'package:flutter/gestures.dart';
+import 'package:moca_application/screens/ContactViewRoute.dart';
 import 'dart:async';
-import 'dart:ui';
-
-
-
 
 
 class ChatRoute extends StatefulWidget {
   final String messages;
   final String name;
   final int chatId;
+  final chatMeta;
+  final ownId;
 
-  ChatRoute({Key key, @required this.messages, @required this.name, @required this.chatId}) : super(key: key);
+  ChatRoute({Key key, @required this.messages, @required this.name, @required this.chatId, @required this.chatMeta, @required this.ownId}) : super(key: key);
 
 
 
@@ -34,6 +33,9 @@ class _ChatRouteState extends State<ChatRoute> {
   var messages;
   var name;
   var chatId;
+  var chatMeta;
+  var ownId;
+
 
 
   @override
@@ -51,10 +53,10 @@ class _ChatRouteState extends State<ChatRoute> {
         messages = jsonDecode(widget.messages);
         name = widget.name;
         chatId = widget.chatId;
+        chatMeta = widget.chatMeta;
+        ownId = widget.ownId;
+        print(ownId);
       }
-
-
-
 
       return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -78,7 +80,10 @@ class _ChatRouteState extends State<ChatRoute> {
                       text: "$name",
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('The button is clicked!');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ContactViewRoute(name: "$name", chatMeta: chatMeta))
+                          );
                         },
                       style: TextStyle(
                         fontSize: 18,
@@ -87,118 +92,120 @@ class _ChatRouteState extends State<ChatRoute> {
                       )),
                 ),
               ),
-              body: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      reverse: true,
-                      controller: _scrollController,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        var message = messages[index];
+              body: RefreshIndicator(
+                onRefresh: _refreshData,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        reverse: true,
+                        controller: _scrollController,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          var message = messages[index];
 
-                        return FutureBuilder(
-                          future:  MessageType().whoIsOwner(message["message"]["type"], message),
-                          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                            Widget child;
-                            if (snapshot.hasData) {
-                              child = snapshot.data;
-                            }else if (snapshot.hasError) {
-                              child = Text("oops, something went wrong");
-                            }else {
-                              child = SizedBox(
-                                child: Icon(
-                                    Icons.account_circle_sharp,
-                                    size:40),
-                              );
-                            }
-                            return  Padding(
-                             padding: const EdgeInsets.symmetric(
-                                 vertical: 2.0, horizontal: 4.0),
-                             child:  child
+                          return FutureBuilder(
+                            future:  MessageType().whoIsOwner(message["message"]["type"], message, ownId, chatMeta),
+                            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                              Widget child;
+                              if (snapshot.hasData) {
+                                child = snapshot.data;
+                              }else if (snapshot.hasError) {
+                                child = Text("oops, something went wrong");
+                              }else {
+                                child = SizedBox(
+                                  child: Icon(
+                                      Icons.account_circle_sharp,
+                                      size:40),
+                                );
+                              }
+                              return  Padding(
+                               padding: const EdgeInsets.symmetric(
+                                   vertical: 2.0, horizontal: 4.0),
+                               child:  child
 
-                             );
-                          },
-
-                        );
-
-
-                      },
+                               );
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: Padding(
-                            padding: const  EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 4),
-                            child: TextField(
-                              maxLines: 4,
-                              minLines: 1,
-                              controller: messageController,
-                              decoration: InputDecoration(
-                                  hintText: 'Type here ...'
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Padding(
+                              padding: const  EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 4),
+                              child: TextField(
+                                maxLines: 4,
+                                minLines: 1,
+                                controller: messageController,
+                                decoration: InputDecoration(
+                                    hintText: 'Type here ...'
+                                ),
+                                autofocus: false,
                               ),
-                              autofocus: false,
                             ),
                           ),
                         ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () async {
-                          yourId = int.parse(await Token().yourId());
-                          setState(() {
-                            i=1;
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.brown[400],
+                            onPressed: () async {
+                              yourId = int.parse(await Token().yourId());
+                              setState(() {
+                                i=1;
 
-                            if(messageController.text!=""){
+                                if(messageController.text!=""){
 
-                              SendMessage().textMessage(messageController.text, chatId);
+                                  SendMessage().textMessage(messageController.text, chatId);
 
-                              messages.insert(0, {
-                                "message_id": messages[messages.length-1]["message_id"]-1,
-                                "contact_id": yourId,
-                                "message":{
-                                  "type":"text",
-                                  "content": messageController.text
-                                },
-                                "sent_datetime": DateTime.now()
+                                  messages.insert(0, {
+                                    "message_id": messages[messages.length-1]["message_id"]-1,
+                                    "contact_id": yourId,
+                                    "message":{
+                                      "type":"text",
+                                      "content": messageController.text
+                                    },
+                                    "sent_datetime": DateTime.now()
+                                  });
+
+                                  _scrollController.animateTo(
+                                    _scrollController.position.minScrollExtent,
+                                    curve: Curves.easeOut,
+                                    duration: const Duration(milliseconds: 300),
+                                  );
+                                }
                               });
 
-                              _scrollController.animateTo(
-                                _scrollController.position.minScrollExtent,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 300),
-                              );
-
-                              print(messages.last);
-
-                            }
-
-                            //messages;
-                          });
-
-                          messageController.clear();
-                        },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                              messageController.clear();
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Icon(Icons.arrow_right_outlined,
+                            ),
+                          ),
                         ),
-                        child: Icon(Icons.arrow_right_outlined),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-
             onWillPop: () async {
               return false;
             },
-
           ));
-      
     }
+
+  Future _refreshData() async {
+    await Future.delayed(Duration(milliseconds: 50));
+    setState(() {});
+  }
   }

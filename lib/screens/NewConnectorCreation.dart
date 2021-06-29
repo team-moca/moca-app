@@ -14,9 +14,6 @@ import 'AllChatsRoute.dart';
 
 class NewConnectorCreation extends StatefulWidget {
 
-  //final String chats;
-  // Overview({Key key, @required this.chats}) : super(key: key);
-
   @override
   _NewConnectorCreation  createState() => _NewConnectorCreation ();
 }
@@ -78,7 +75,7 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/connector.png",
+                      "assets/mocaAppIcon.png",
                       height: 70,
                       width: 70,
                     ),
@@ -235,8 +232,6 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                       phone = transformPhone(phone);
 
                       //todo: add whatsapp, does not work yet
-                      print("HOLDER");
-                      print(holder.toLowerCase());
                       String newConnector = await ConnectorSetup()
                           .createConnector(holder.toLowerCase());
                       if (newConnector != "") {
@@ -299,5 +294,4 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
     }
       return phone;
   }
-
 }

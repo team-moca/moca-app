@@ -1,13 +1,8 @@
 import 'dart:convert';
-//import 'package:http/http.dart' as http;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
-import 'dart:io';
-import 'dart:convert';
-
-
 
 
 class GetMessages {
@@ -35,12 +30,10 @@ class GetMessages {
     );
 
     if (response.statusCode == 200) {
-      print("TESTESTESTETSTETST");
-      return response.body;
+
+      return utf8.decode(response.bodyBytes);
     } else {
-      // throw an exception.
       throw Exception(response.statusCode);
-      return null;
     }
   }
 

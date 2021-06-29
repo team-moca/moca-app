@@ -4,8 +4,6 @@ import 'dart:core';
 
 class CreateAvatar {
 
-
-
     create(name){
       String initials = getInitials(name);
       //String colors = getColors(name);
@@ -25,7 +23,5 @@ class CreateAvatar {
 
     getColors(name){
       int color = int.fromEnvironment(name);
-      print(color);
-
     }
 }

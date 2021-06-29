@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moca_application/api/getContacts.dart';
 import 'dart:convert';
-import 'package:moca_application/screens/Chat.dart';
 import 'package:moca_application/helper/CreateAvatar.dart';
-import 'package:moca_application/api/getMessages.dart';
 
 
 class NewChatRoute extends StatelessWidget {
@@ -13,7 +11,7 @@ class NewChatRoute extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[300],
         elevation: 0,
-        title: Text("START NEW CHAT"),
+        title: Text("START A NEW CHAT"),
       ),
       body: Center(
         child: FutureBuilder(
@@ -77,11 +75,11 @@ class NewChatRoute extends StatelessWidget {
                                     fontSize: 12)),
 
                             onTap: () async {
-                              var messages = await GetMessages().getMessages(contacts[index]["contact_id"]);
+                             /* var messages = await GetMessages().getMessages(contacts[index]["contact_id"]);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ChatRoute(messages: messages, name: contact, chatId: contacts[index]["contact_id"])),
-                              );
+                                MaterialPageRoute(builder: (context) => ChatRoute(messages: messages, name: chats[index]["name"], chatId: chats[index]["chat_id"])),
+                              );*/
                             },
 
                           ),
@@ -97,7 +95,10 @@ class NewChatRoute extends StatelessWidget {
                 print("Could not load chats: "+snapshot.error.toString());
 
                 children = Container(
-                  child: Text("oops - we could not receive any contacts"),
+                  child: Text("oops - we could not receive any contacts",
+                  style: TextStyle(
+                    color: Colors.grey[300]
+                  )),
                 );
               }else {
 

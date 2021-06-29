@@ -46,46 +46,6 @@ class _TelegramVerificationRoute  extends State<TelegramVerificationRoute > {
           ),
           centerTitle: true,
         ),
-
-       /* drawer: Drawer(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('display users name, initials and phone number'),
-                decoration: BoxDecoration(
-                  color:  Colors.grey[300],
-                ),
-              ),
-              ListTile(
-                title: Text('Add service'),
-                onTap: () {
-                  // Update the state of the app.
-                  // Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()));
-                },
-              ),
-              ListTile(
-                title: Text('Log Out'),
-                onTap:  () async {
-                  await Logout().logout();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginRoute()));
-                },
-              ),
-            ],
-          ),
-        ),*/
-
         body: LoadingOverlay(
           isLoading: _saving,
           child: Column(
@@ -129,7 +89,7 @@ class _TelegramVerificationRoute  extends State<TelegramVerificationRoute > {
                       var isTelegramVerified = await ConnectorSetup().setupTelegramVerification(connectorId, code);
 
                       _saving = true;
-                      sleep(const Duration(seconds:5));
+                      sleep(const Duration(seconds:8));
                       _saving = false;
 
                       if (isTelegramVerified){

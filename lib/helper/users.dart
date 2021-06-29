@@ -1,4 +1,3 @@
-import 'package:moca_application/helper/token.dart';
 
 class Users {
 
@@ -17,8 +16,6 @@ class Users {
   String getUserName(chat){
     return "";
   }
-
-
 
   String getOwnAvatar(){
     return "";

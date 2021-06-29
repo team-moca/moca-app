@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moca_application/api/apiInfo.dart';
 
 
 class Register {
 
   final URL = ApiInfo().url() + "/auth/register";
-
 
   Future<http.Response> register(String username, String password, String mail) async {
 
@@ -23,15 +21,5 @@ class Register {
         })
     );
     return response;
-    if (response.statusCode == 200) {
-      return response;
-      //at this point the authentication was successful, the verification token is saved in shared preferences
-    } else {
-      print(response.statusCode);
-      return response;
-      return null;
-    }
-
   }
-
 }

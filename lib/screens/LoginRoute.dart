@@ -69,11 +69,7 @@ class DataInput extends StatefulWidget {
   _DataInput createState() => _DataInput();
 }
 
-// Define a corresponding State class.
-// This class holds the data related to the Form.
 class _DataInput extends State<DataInput> {
-  // Create a text controller and use it to retrieve the current value
-  // of the TextField.
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -145,7 +141,5 @@ class _DataInput extends State<DataInput> {
             ),
           ],
         );
-
-
   }
 }

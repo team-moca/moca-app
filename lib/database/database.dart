@@ -1,8 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:async';
-import 'package:flutter/material.dart';
-
 
 
 class Data{
@@ -36,7 +34,6 @@ class Data{
         "avatar TEXT,"
         "is_self BOOL"
         ")");
-
   }
 
   Future<Database> createDatabase() async {
@@ -47,7 +44,6 @@ class Data{
     return database;
   }
 
-//should not be used anymore
   createChat(int chatId, String name, String chatType, String contactIds, int lastMessageId) async {
     Database db = await createDatabase();
     var result;
@@ -56,6 +52,4 @@ class Data{
             " VALUES ($chatId, $name, $chatType, $contactIds, $lastMessageId)");
     return result;
   }
-
-
 }

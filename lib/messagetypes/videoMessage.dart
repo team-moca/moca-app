@@ -7,11 +7,11 @@ class VideoMessage {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: RichText(
           text: TextSpan(
-              text:("videos can not be displayed yet"),
+              text:("Videos can not be displayed yet"),
             style: TextStyle(color: Colors.black),
 
           )

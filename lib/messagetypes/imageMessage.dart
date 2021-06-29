@@ -1,21 +1,25 @@
-//TODO content from API
 import 'package:flutter/material.dart';
 
 class ImageMessage {
 
   Widget createImageMessage(message){
 
-    print(message);
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
       ),
       child: Image.network(
-        "https://images.cdn3.stockunlimited.net/preview1300/astronaut-avatar_1408749.jpg",
+        "https://moca.vigonotion.com/"+message["url"],
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+
+          return Center(child: Text('Loading...'));
+          // You can use LinearProgressIndicator or CircularProgressIndicator instead
+        },
+        errorBuilder: (context, error, stackTrace) =>
+            Text('Some error occurred!'),
         height: 250,
       )
-      //TODO max width, bg color, padding, align left / right
     );
   }
 }

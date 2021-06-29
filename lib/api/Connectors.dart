@@ -5,7 +5,6 @@ import 'apiInfo.dart';
 import 'package:moca_application/api/apiInfo.dart';
 
 
-
 class Connectors {
 
   final URL = ApiInfo().url() + "/connectors";

@@ -8,8 +8,6 @@ import 'package:moca_application/helper/token.dart';
 
 
 class NewConnector extends StatefulWidget {
-  //final String chats;
-  // Overview({Key key, @required this.chats}) : super(key: key);
 
   @override
   _NewConnector  createState() => _NewConnector ();
@@ -20,9 +18,6 @@ class _NewConnector  extends State<NewConnector > {
 
   @override
   Widget build(BuildContext context) {
-    // chats come from Overview to _Overview
-    // var chats = jsonDecode(widget.chats);
-
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

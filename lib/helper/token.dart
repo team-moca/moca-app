@@ -29,5 +29,4 @@ class Token {
     var decryptedToken = await decryptToken();
     return decryptedToken["username"];
   }
-
 }
