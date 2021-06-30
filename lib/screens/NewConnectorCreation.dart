@@ -216,7 +216,7 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
                     ),
                     child: Text(
-                        "Create cconnector"
+                        "Create connector"
                     ),
                     onPressed: () async {
                       getDropDownItem();

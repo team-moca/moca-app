@@ -51,7 +51,7 @@ class _LoginRouteState extends State<LoginRoute> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => RegisterRoute()),
           );        },
