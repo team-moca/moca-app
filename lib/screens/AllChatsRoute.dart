@@ -119,15 +119,6 @@ class _AllChats extends State<AllChats> {
               ),
               Divider(),
               ListTile(
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()));
-                },
-              ),
-              Divider(),
-              ListTile(
                 title: Text('Log Out'),
                 onTap:  () async {
                   await Logout().logout();

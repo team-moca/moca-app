@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:moca_application/api/getChats.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moca_application/messagetypes/textMessage.dart';
 import 'package:moca_application/messagetypes/videoMessage.dart';
 import 'package:moca_application/messagetypes/imageMessage.dart';
@@ -10,7 +11,7 @@ import 'package:moca_application/helper/token.dart';
 
 class MessageType {
 
-  Widget identifyMessage(String messageType,msg){
+  Widget identifyMessage(String messageType,msg, token){
 
 
     var message = msg;
@@ -21,7 +22,7 @@ class MessageType {
       break;
 
       case "image": {
-        return ImageMessage().createImageMessage(message) ;
+        return ImageMessage().createImageMessage(message, token) ;
       }
       break;
 
@@ -53,6 +54,8 @@ class MessageType {
   }
 
   Future<Widget> whoIsOwner(String messageType,msg, ownId, chatMeta) async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
     if(msg["contact_id"].toString() == ownId.toString()){
       return Container(
         padding: new EdgeInsets.fromLTRB(40, 4, 0, 0),
@@ -61,7 +64,7 @@ class MessageType {
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(8),
             ),
-            child: identifyMessage(messageType,msg)),
+            child: identifyMessage(messageType,msg, token)),
       );
     }else{
       return Container(
@@ -75,7 +78,7 @@ class MessageType {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ShowOwner(msg, chatMeta),
-        identifyMessage(messageType,msg),
+        identifyMessage(messageType,msg, token),
       ],
     )),
       );

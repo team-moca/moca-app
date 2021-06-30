@@ -103,7 +103,6 @@ class _DataInput extends State<DataInput> {
             ElevatedButton(
               onPressed: () async {
                 http.Response response = await Login().login(usernameController.text, passwordController.text);
-                //todo: check the response of Login().login -> if status code != 200 show error
                 if(response.statusCode==200){
                   Navigator.pushReplacement(
                     context,

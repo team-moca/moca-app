@@ -132,7 +132,6 @@ class FillDatabase {
         for (var j = 0; j<localContacts.length; j++) {
           if (localContacts[j]["contact_id"] == contactId) {
             //if user already exists in local db he will not be added again -> changes made to the user on server are not recognized
-            //todo: will that become a problem?
             contactExists= true;
           }
         }

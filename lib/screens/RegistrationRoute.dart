@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moca_application/screens/LoginRoute.dart';
 import 'package:http/http.dart' as http;
 import 'package:moca_application/api/registration.dart';
+import 'package:moca_application/screens/AccountVerificationRoute.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DataInput extends StatefulWidget {
@@ -88,11 +90,13 @@ class _DataInput extends State<DataInput> {
                                     backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {return Colors.brown[400];}),
                                   ),
                                   child: Text('Continue'),
-                                  onPressed: (){
+                                  onPressed: () async {
+                                    final prefs = await SharedPreferences.getInstance();
+                                    prefs.setString('username', usernameController.text);
                                     Navigator.pushReplacement(
                                       context,
                                       //MaterialPageRoute(builder: (context) => Overview(chats: chats)),
-                                      MaterialPageRoute(builder: (context) => LoginRoute()),
+                                      MaterialPageRoute(builder: (context) => AccountVerificationRoute()),
                                     );
                                   }
                               ),

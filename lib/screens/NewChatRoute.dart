@@ -66,8 +66,6 @@ class NewChatRoute extends StatelessWidget {
                                 )
                               ],
                             ),
-                            //TODO: if last message is image or video, display text
-                            //TODO: format text for time of last message -> time or days ago
                             trailing: Text(contacts[index]["service_id"],
                                 style: TextStyle(
                                     color: Colors.grey[800],

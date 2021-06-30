@@ -6,6 +6,7 @@ import 'package:moca_application/helper/token.dart';
 import 'package:flutter/gestures.dart';
 import 'package:moca_application/screens/ContactViewRoute.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ChatRoute extends StatefulWidget {
@@ -167,7 +168,7 @@ class _ChatRouteState extends State<ChatRoute> {
 
                                   messages.insert(0, {
                                     "message_id": messages[messages.length-1]["message_id"]-1,
-                                    "contact_id": yourId,
+                                    "contact_id": ownId,
                                     "message":{
                                       "type":"text",
                                       "content": messageController.text
@@ -205,7 +206,7 @@ class _ChatRouteState extends State<ChatRoute> {
     }
 
   Future _refreshData() async {
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(Duration(milliseconds: 300));
     setState(() {});
   }
   }

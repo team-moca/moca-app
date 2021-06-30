@@ -1,4 +1,3 @@
-//TODO content from API
 import 'package:flutter/material.dart';
 
 class VideoMessage {

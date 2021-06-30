@@ -111,14 +111,6 @@ class _NewConnector  extends State<NewConnector > {
                 // Navigator.pop(context);
               ),
               Divider(),
-              ListTile(
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()));
-                },
-              ),
               Divider(),
               ListTile(
                 title: Text('Log Out'),

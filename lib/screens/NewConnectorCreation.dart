@@ -140,15 +140,6 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
               ),
               Divider(),
               ListTile(
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()));
-                },
-              ),
-              Divider(),
-              ListTile(
                 title: Text('Log Out'),
                 onTap:  () async {
                   await Logout().logout();
@@ -231,7 +222,6 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                       getDropDownItem();
                       phone = transformPhone(phone);
 
-                      //todo: add whatsapp, does not work yet
                       String newConnector = await ConnectorSetup()
                           .createConnector(holder.toLowerCase());
                       if (newConnector != "") {
@@ -259,7 +249,7 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text(
-                                      'Oops, the server is currently unreachable'),
+                                      'Service connected'),
                                 );
                               },
                             );
@@ -272,7 +262,7 @@ class _NewConnectorCreation  extends State<NewConnectorCreation > {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text(
-                                  'Oops, the server is currently unreachable'),
+                                  'Service connected'),
                             );
                           },
                         );

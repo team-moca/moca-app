@@ -20,12 +20,15 @@ class SendMessage {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
+        //will be ignored
         "message_id": 56183044,
+        //will be ignored
         "contact_id": 1,
         "message": {
           "type": "text",
           "content": messageContent
         },
+        //will be ignored
         "sent_datetime": "2020-11-11T09:02:30"
       }),
     );
